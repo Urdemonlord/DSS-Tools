@@ -1,3 +1,5 @@
+import { Criteria, Alternative } from '../types';
+
 // Application constants
 
 export const DSS_METHODS = [
@@ -14,9 +16,9 @@ export type DSSMethodId = typeof DSS_METHODS[number]['id'];
 export const LOCALSTORAGE_KEY = 'dss-app-data';
 
 export const DEFAULT_CRITERIA: Criteria[] = [
-  { id: 'c1', name: 'Cost', weight: 0.4, type: 'cost' },
-  { id: 'c2', name: 'Quality', weight: 0.3, type: 'benefit' },
-  { id: 'c3', name: 'Delivery Time', weight: 0.3, type: 'cost' },
+  { id: 'c1', name: 'Cost', weight: 0.4, type: 'cost', percentage: 40 },
+  { id: 'c2', name: 'Quality', weight: 0.3, type: 'benefit', percentage: 30 },
+  { id: 'c3', name: 'Delivery Time', weight: 0.3, type: 'cost', percentage: 30 },
 ];
 
 export const DEFAULT_ALTERNATIVES: Alternative[] = [

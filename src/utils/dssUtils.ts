@@ -1,4 +1,4 @@
-import { Alternative, Criteria, MethodResult } from '../types';
+import { Alternative, Criteria, MethodResult, WPDetails, TOPSISDetails, MOORADetails } from '../types';
 
 /**
  * Simple Additive Weighting (SAW) Method
@@ -139,7 +139,7 @@ export const calculateTOPSIS = (
       details: {
         positiveDistance: sep.positiveDistance,
         negativeDistance: sep.negativeDistance,
-      },
+      } as TOPSISDetails,
       rank: 0, // Will be calculated after sorting
     };
   });
@@ -205,7 +205,7 @@ export const calculateMOORA = (
       details: {
         benefitSum,
         costSum,
-      },
+      } as MOORADetails,
       rank: 0, // Will be calculated after sorting
     };
   });
@@ -365,15 +365,21 @@ export const calculateWP = (
   }
 
   // Step 1: Calculate vector S (power of weighted values)
+  // Calculate total importance
+  const totalImportance = criteria.reduce((sum, criterion) => sum + (criterion.importance || 0), 0);
+
   const vectorS = alternatives.map((alt) => {
     let s = 1;
     
     criteria.forEach((criterion) => {
       const value = alt.values[criterion.id] || 0;
+      // Use normalized importance as exponent
+      const normalizedImportance = totalImportance !== 0 ? (criterion.importance || 0) / totalImportance : 0;
+
       if (criterion.type === 'benefit') {
-        s *= Math.pow(value, criterion.weight);
+        s *= Math.pow(value, normalizedImportance);
       } else {
-        s *= Math.pow(value, -criterion.weight);
+        s *= Math.pow(value, -normalizedImportance);
       }
     });
 
@@ -391,7 +397,7 @@ export const calculateWP = (
     score: sumS !== 0 ? item.s / sumS : 0,
     details: {
       vectorS: item.s,
-    },
+    } as WPDetails,
     rank: 0, // Will be calculated after sorting
   }));
 

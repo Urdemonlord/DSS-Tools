@@ -7,8 +7,9 @@ export interface Criteria {
   id: string;
   name: string;
   weight: number;
+  importance?: number;
   type: CriteriaType;
-  percentage: number; // Add this line
+  percentage: number;
 }
 
 export interface Alternative {
@@ -22,13 +23,19 @@ export interface DSSData {
   alternatives: Alternative[];
 }
 
-// Results types
-export interface CalculationDetails {
-  intermediateValues?: Record<string, number>;
-  steps?: Array<{
-    description: string;
-    values: Record<string, number>;
-  }>;
+// Specific details interfaces for each method
+export interface WPDetails {
+  vectorS: number;
+}
+
+export interface TOPSISDetails {
+  positiveDistance: number;
+  negativeDistance: number;
+}
+
+export interface MOORADetails {
+  benefitSum: number;
+  costSum: number;
 }
 
 export interface MethodResult {
@@ -36,7 +43,7 @@ export interface MethodResult {
   score: number;
   rank: number;
   normalizedValues?: Record<string, number>;
-  details?: CalculationDetails; // Replace 'any' with specific type
+  details?: WPDetails | TOPSISDetails | MOORADetails;
 }
 
 export interface CalculationResult {
